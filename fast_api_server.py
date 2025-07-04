@@ -23,8 +23,8 @@ app.add_middleware(
 # Load emotion detector
 text_detector = TextEmotionDetector()
 
-#client = MongoClient("mongodb+srv://hritikagore711:JGUUuVF8ytHd7l0a@cluster0.qoc2agk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-client = MongoClient("mongodb://localhost:27017")  # For local MongoDB
+client = MongoClient("mongodb+srv://hritikagore711:JGUUuVF8ytHd7l0a@cluster0.qoc2agk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+#client = MongoClient("mongodb://localhost:27017")  # For local MongoDB
 db = client["moodmusic"]
 songs_collection = db["songs"]
 
