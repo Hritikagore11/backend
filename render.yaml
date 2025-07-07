@@ -7,4 +7,4 @@ services:
     autoDeploy: true
     envVars:
       - key: MONGO_URI
-        value: mongodb+srv://hritikagore711:...your_full_link_here...
+        value: mongodb+srv://hritikagore711:JGUUuVF8ytHd7l0a@cluster0.qoc2agk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
