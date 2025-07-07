@@ -4,8 +4,6 @@ from pydantic import BaseModel
 from mood_music_player.detectors.image_emotion import detect_emotions_with_dominant_box
 from mood_music_player.detectors.text_emotion import TextEmotionDetector
 from pymongo import MongoClient
-import os
-from motor.motor_asyncio import AsyncIOMotorClient 
 from fastapi.staticfiles import StaticFiles
 import shutil
 import os
@@ -23,11 +21,11 @@ app.add_middleware(
 # Load emotion detector
 text_detector = TextEmotionDetector()
 
-client = MongoClient("mongodb+srv://hritikagore711:JGUUuVF8ytHd7l0a@cluster0.qoc2agk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-#client = MongoClient("mongodb://localhost:27017")  # For local MongoDB
+# ✅ Load MongoDB URI from environment variable
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
 db = client["moodmusic"]
 songs_collection = db["songs"]
-
 
 # Serve static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -38,12 +36,10 @@ class TextInput(BaseModel):
 
 # -------------------- ROUTES --------------------
 
-# Root route
 @app.get("/")
 async def root():
     return {"message": "Mood Music Player API is running."}
 
-# Detect image-based emotion
 @app.post("/detect-image")
 async def detect_image(image: UploadFile = File(...)):
     try:
@@ -59,7 +55,6 @@ async def detect_image(image: UploadFile = File(...)):
         print(f"❌ Image Detection Error: {e}")
         return {"error": "Failed to detect emotion from image."}
 
-# Detect text-based emotion
 @app.post("/detect-text")
 async def detect_text(data: TextInput):
     try:
@@ -69,7 +64,6 @@ async def detect_text(data: TextInput):
         print(f"❌ Text Detection Error: {e}")
         return {"error": "Failed to detect emotion from text."}
 
-# Get songs by mood
 @app.get("/songs/{mood}")
 async def get_songs_for_mood(mood: str):
     try:
@@ -84,7 +78,6 @@ async def get_songs_for_mood(mood: str):
         print(f"❌ Fetch Songs Error: {e}")
         return {"error": "Could not fetch songs."}
 
-# Upload song and add to MongoDB
 @app.post("/add-song")
 async def add_song(
     title: str = Form(...),
