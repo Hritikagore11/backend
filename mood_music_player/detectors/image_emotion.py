@@ -14,7 +14,7 @@ def detect_emotions_with_dominant_box(image_path, save_dir="input_images"):
         img_path=image_path,
         actions=['emotion'],
         enforce_detection=False,
-        detector_backend="retinaface"
+        detector_backend="opencv"
     )
 
     if isinstance(results, dict):
