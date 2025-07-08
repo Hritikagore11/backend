@@ -1,31 +1,30 @@
 FROM python:3.9-slim
 
-# Avoid prompts from debconf
+# Avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install system dependencies
+# Install required system packages
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
     build-essential \
     libgl1 \
     libglib2.0-0 \
+    git \
+    curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy code
 COPY . /app
 
-# Install Python packages
+# Upgrade pip and install dependencies
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Expose FastAPI port
+# Expose port used by Uvicorn
 EXPOSE 5000
 
-# Run FastAPI
+# Run FastAPI app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
-
